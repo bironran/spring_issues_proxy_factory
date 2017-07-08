@@ -8,14 +8,14 @@ When we have multiple such Dependant beans and multiple type-searches, we reach 
 In a complex application this has been observed to cause 100,000's of objects to be instantiated (with about 500 beans defined), causing startup to take multiple minutes and GC to spike.
 
 # Sample
-The sample has 5 beans. Each has a Provider<DummyBeanA> to trigger a type-search during bean initialization. The beans are declared in the applicationContext.xml in order (bean1, bean2...) and for each bean we declare a ProxyFactoryBean (bean1Factory, bean2Factory...) also in order. Each bean rely on the previous bean (bean 5 on bean 4, bean 4 on bean 3).
+The sample has 5 beans. Each has a ```Provider<DummyBeanA>``` to trigger a type-search during bean initialization. The beans are declared in the applicationContext.xml in order (bean1, bean2...) and for each bean we declare a ProxyFactoryBean (bean1Factory, bean2Factory...) also in order. Each bean rely on the previous bean (bean 5 on bean 4, bean 4 on bean 3).
 Note that order of the beans in the xml and their dependencies are inverse on purpose. The type-search scans the beans in the order they are discovered (either from component-scan or from the xml) and the inverse order cause the beans to be impossible to initialize in the XMl order (throwing the aforementioned exception).
 
 # Solution
 Yet to be found...
 
 # Execution output
-
+```
 +65: (Bean1): Constructor (times: 1, total constructions 1)
 +94: (Bean2): Constructor (times: 1, total constructions 2)
 +154: (Bean3): Constructor (times: 1, total constructions 3)
@@ -66,10 +66,10 @@ Yet to be found...
 +423: (Bean5$$EnhancerBySpringCGLIB$$378ee1c2): Constructor (times: 1, total constructions 38)
 +435: (Bean5): Called NOP
 +435: === NOP done
-
+```
 
 # Execution output with logging post processor (see application context xml)
-
+```
 +0: 		Spring startup: before instantiation of [bean1] of [com.rb.springissues.sample.Bean1]
 +1: (Bean1): Constructor (times: 1, total constructions 1)
 +21: 		Spring startup: after instantiation of [bean1] of [com.rb.springissues.sample.Bean1]
@@ -372,3 +372,4 @@ Yet to be found...
 +499: 		Spring startup summary: time for bean [bean5Factory] of [com.rb.springissues.sample.Bean5$$EnhancerBySpringCGLIB$$378ee1c2]: instantiation: [119], initialization [212], total [331]
 +515: (Bean5): Called NOP
 +516: === NOP done
+```
