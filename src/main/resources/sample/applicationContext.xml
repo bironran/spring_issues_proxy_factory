@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Copyright © 2008-2016 Egnyte Inc. All Rights Reserved.-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd"
+       default-lazy-init="false">
+    <context:annotation-config/>
+
+    <!--Enable to see the full gory details-->
+    <!--<bean id="springStartupLogger" class="com.rb.springissues.SpringStartupLogger"/>-->
+
+    <bean id="bean1" class="com.rb.springissues.sample.Bean1"/>
+    <bean id="bean2" class="com.rb.springissues.sample.Bean2"/>
+    <bean id="bean3" class="com.rb.springissues.sample.Bean3"/>
+    <bean id="bean4" class="com.rb.springissues.sample.Bean4"/>
+    <bean id="bean5" class="com.rb.springissues.sample.Bean5"/>
+
+    <bean id="bean1Factory" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="target" ref="bean1"/>
+        <property name="proxyTargetClass" value="true"/>
+    </bean>
+    <bean id="bean2Factory" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="target" ref="bean2"/>
+        <property name="proxyTargetClass" value="true"/>
+    </bean>
+    <bean id="bean3Factory" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="target" ref="bean3"/>
+        <property name="proxyTargetClass" value="true"/>
+    </bean>
+    <bean id="bean4Factory" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="target" ref="bean4"/>
+        <property name="proxyTargetClass" value="true"/>
+    </bean>
+    <bean id="bean5Factory" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="target" ref="bean5"/>
+        <property name="proxyTargetClass" value="true"/>
+    </bean>
+
+    <bean id="aProvider" class="com.rb.springissues.sample.DummyBeanAProvider"/>
+
+</beans>
