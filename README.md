@@ -11,6 +11,18 @@ In a complex application this has been observed to cause 100,000's of objects to
 The sample has 5 beans. Each has a ```Provider<DummyBeanA>``` to trigger a type-search during bean initialization. The beans are declared in the applicationContext.xml in order (bean1, bean2...) and for each bean we declare a ProxyFactoryBean (bean1Factory, bean2Factory...) also in order. Each bean rely on the previous bean (bean 5 on bean 4, bean 4 on bean 3).
 Note that order of the beans in the xml and their dependencies are inverse on purpose. The type-search scans the beans in the order they are discovered (either from component-scan or from the xml) and the inverse order cause the beans to be impossible to initialize in the XMl order (throwing the aforementioned exception).
 
+In the above example the flow is (fully managed by Spring):
+
+ * Instantiate `bean1`. Try to initialize `bean1` and discover it has a `Provider<X>`.
+    * Go through all `BeanDefinition` in the context. For each:
+        * if it's a "normal" bean, evaluate the class to see if it fits.
+        * if it's a `FactoryBean`, try to instantiate and initialize the `FactoryBean` to see what "`getObjectType()`" would return.
+            * In order to initialize `bean2Factory`, it needs to be fed with an instance of `bean2`. So Spring tries to instantiate and  initialize `bean2`.
+                * for `bean2` to be initialized it needs to satisfy the `Provider<X>` - triggering the whole cycle again.
+                * only after going through the cycle 4 more times (beans 2-5), Spring discovered that bean2 cannot be initialized since it relies on `bean3` - causing Spring to throw a cyclic dependency error.
+        * If the `FactoryObject` would have been created correctly, Spring now asks for the type and cache the response ("good path").
+        * However we got an exception (the cyclic dependency error) it's caught and ignored, but the result isn't cached - so if we get another bean it'll do the same thing again (and again and again...) 
+
 # Solution
 Yet to be found...
 
