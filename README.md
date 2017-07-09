@@ -24,7 +24,12 @@ In the above example the flow is (fully managed by Spring):
         * However we got an exception (the cyclic dependency error) it's caught and ignored, but the result isn't cached - so if we get another bean it'll do the same thing again (and again and again...) 
 
 # Solution
-Yet to be found...
+Apparently it's easy - replace `<property name="target" ref="beanName"/>` with
+        `<property name="targetName">
+            <idref bean="beanName"/>
+        </property>
+        <property name="targetClass" value="beanClass"/>`
+        
 
 # Execution output
 ```
